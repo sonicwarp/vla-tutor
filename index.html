@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>VLA 과외 — 내 성장</title>
-<!-- PWA / iOS 홈화면 앱 -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d1117">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,56 +12,50 @@
 <link rel="apple-touch-icon" href="icon-512.png">
 <style>
   :root{
-    --bg:#0d1117; --card:#161b22; --card2:#1c2230; --line:#2a3240;
-    --txt:#e6edf3; --dim:#8b949e; --acc:#58a6ff; --gold:#ffd33d;
-    --fire:#ff7b43; --green:#3fb950; --purple:#bc8cff; --red:#f85149;
+    --bg:#0d1117; --card:#161b22; --line:#2a3240; --txt:#e6edf3; --dim:#8b949e;
+    --acc:#58a6ff; --gold:#ffd33d; --fire:#ff7b43; --purple:#bc8cff; --green:#3fb950; --red:#f85149;
   }
   *{box-sizing:border-box; margin:0; padding:0}
   body{background:radial-gradient(1200px 600px at 50% -10%,#1b2540 0%,var(--bg) 60%);
        color:var(--txt); font-family:-apple-system,"Segoe UI","Apple SD Gothic Neo",sans-serif;
-       max-width:520px; margin:0 auto; -webkit-font-smoothing:antialiased;
-       /* iOS 노치/다이나믹 아일랜드/홈인디케이터 피하기 */
-       padding:calc(env(safe-area-inset-top, 0px) + 16px)
-               calc(env(safe-area-inset-right, 0px) + 16px)
-               calc(env(safe-area-inset-bottom, 0px) + 28px)
-               calc(env(safe-area-inset-left, 0px) + 16px);
-       min-height:100vh}
-  h1{font-size:19px; font-weight:800; letter-spacing:-.3px; margin-bottom:2px}
-  .sub{color:var(--dim); font-size:12px; margin-bottom:18px}
+       max-width:520px; margin:0 auto; -webkit-font-smoothing:antialiased; min-height:100vh;
+       padding:calc(env(safe-area-inset-top,0px) + 14px)
+               calc(env(safe-area-inset-right,0px) + 16px)
+               calc(env(safe-area-inset-bottom,0px) + 84px)
+               calc(env(safe-area-inset-left,0px) + 16px)}
+  .topbar{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px}
+  .topbar b{font-size:17px; font-weight:800; letter-spacing:-.3px}
+  .topbar span{font-size:11px; color:var(--dim)}
   .card{background:var(--card); border:1px solid var(--line); border-radius:18px;
         padding:18px; margin-bottom:14px; box-shadow:0 6px 24px rgba(0,0,0,.25)}
   .row{display:flex; align-items:center; gap:16px}
+  .sec-title{font-size:13px; font-weight:700; color:var(--dim); margin-bottom:12px}
+  /* 탭 */
+  .tab{display:none} .tab.active{display:block; animation:fade .25s ease}
+  @keyframes fade{from{opacity:0; transform:translateY(6px)}to{opacity:1}}
   /* 레벨 링 */
   .ring{--p:0; width:92px; height:92px; border-radius:50%; flex:0 0 auto; display:grid; place-items:center;
-        background:conic-gradient(var(--acc) calc(var(--p)*1%), #222b3a 0);
-        transition:--p 1s ease}
-  .ring .inner{width:76px; height:76px; border-radius:50%; background:var(--card);
-        display:grid; place-items:center; text-align:center}
+        background:conic-gradient(var(--acc) calc(var(--p)*1%), #222b3a 0)}
+  .ring .inner{width:76px; height:76px; border-radius:50%; background:var(--card); display:grid; place-items:center; text-align:center}
   .ring .lvl{font-size:11px; color:var(--dim)} .ring .num{font-size:26px; font-weight:800; line-height:1}
   .rank{font-size:20px; font-weight:800} .rank .em{font-size:24px}
   .xptext{color:var(--dim); font-size:12px; margin-top:3px}
-  /* 불꽃 스트릭 */
-  .flame{font-size:52px; filter:drop-shadow(0 0 14px var(--fire));
-         animation:flick 1.6s ease-in-out infinite}
+  .flame{font-size:52px; filter:drop-shadow(0 0 14px var(--fire)); animation:flick 1.6s ease-in-out infinite}
   @keyframes flick{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.12) rotate(2deg)}}
-  .bignum{font-size:40px; font-weight:900; line-height:1}
-  .label{color:var(--dim); font-size:12px}
-  /* 칭찬 배너 */
-  .banner{background:linear-gradient(135deg,#2b2140,#3a2a1a); border:1px solid #4a3a5a;
-          text-align:center; padding:16px}
+  .bignum{font-size:40px; font-weight:900; line-height:1} .label{color:var(--dim); font-size:12px}
+  .banner{background:linear-gradient(135deg,#2b2140,#3a2a1a); border:1px solid #4a3a5a; text-align:center}
   .banner .big{font-size:18px; font-weight:800; color:var(--gold)}
   .banner .small{color:var(--dim); font-size:12px; margin-top:4px}
-  /* 퍼즐판 */
-  .sec-title{font-size:13px; font-weight:700; color:var(--dim); margin-bottom:12px; text-transform:none}
+  .stats2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  .stat{background:#11161f; border:1px solid var(--line); border-radius:12px; padding:12px; text-align:center}
+  .stat .v{font-size:22px; font-weight:800} .stat .k{font-size:11px; color:var(--dim); margin-top:2px}
+  /* 조각 */
   .coll{display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
   .cpz{position:relative; aspect-ratio:1; border-radius:12px; display:flex; flex-direction:column;
        align-items:center; justify-content:center; gap:3px; background:#11161f; border:1px solid #2a3240}
-  .cpz.own{background:#161d2b; animation:pop .4s ease}
-  @keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
-  .cpz .ce{font-size:27px; filter:grayscale(1) opacity(.28)}
-  .cpz.own .ce{filter:none}
-  .cpz .cn{font-size:9px; color:#4a5568; line-height:1}
-  .cpz.own .cn{color:var(--dim)}
+  .cpz.own{background:#161d2b}
+  .cpz .ce{font-size:27px; filter:grayscale(1) opacity(.28)} .cpz.own .ce{filter:none}
+  .cpz .cn{font-size:9px; color:#4a5568; line-height:1} .cpz.own .cn{color:var(--dim)}
   .cpz .cb{position:absolute; top:3px; right:4px; font-size:10px; font-weight:800; color:#fff;
            background:#2f4d7a; border-radius:999px; padding:0 5px}
   .cpz.own.r-rare{border-color:var(--acc); box-shadow:0 0 8px rgba(88,166,255,.3)}
@@ -73,167 +66,193 @@
   /* 배지 */
   .badges{display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
   .bg{text-align:center; padding:12px 4px; border-radius:14px; background:#11161f; border:1px solid var(--line)}
-  .bg.earned{background:linear-gradient(135deg,#2a2440,#3a2f1a); border-color:#5a4a2a;
-             box-shadow:0 0 12px rgba(255,211,61,.25)}
-  .bg .em{font-size:28px; filter:grayscale(1) opacity(.35)}
-  .bg.earned .em{filter:none}
+  .bg.earned{background:linear-gradient(135deg,#2a2440,#3a2f1a); border-color:#5a4a2a; box-shadow:0 0 12px rgba(255,211,61,.25)}
+  .bg .em{font-size:28px; filter:grayscale(1) opacity(.35)} .bg.earned .em{filter:none}
   .bg .nm{font-size:10px; color:var(--dim); margin-top:4px; line-height:1.2}
-  .bg .dd{font-size:9px; color:#5a6678; margin-top:2px}
-  .bg.earned .dd{color:var(--gold)}
-  /* 칩 */
+  .bg .dd{font-size:9px; color:#5a6678; margin-top:2px} .bg.earned .dd{color:var(--gold)}
   .chips{display:flex; flex-wrap:wrap; gap:6px}
-  .chip{background:#2a1f1f; border:1px solid #5a3a3a; color:#ffb4a4; border-radius:999px;
-        padding:4px 10px; font-size:11px}
-  .chip.mild{background:#1f2a1f; border-color:#3a5a3a; color:#a4ffb4}
-  /* 예산바 */
+  .chip{background:#2a1f1f; border:1px solid #5a3a3a; color:#ffb4a4; border-radius:999px; padding:4px 10px; font-size:11px}
+  /* 아카이브 */
+  .arc{border-left:3px solid var(--acc)}
+  .arc .ah{font-size:12px; color:var(--dim)}
+  .arc .am{font-weight:700; margin:4px 0 8px; font-size:14px; color:var(--txt)}
+  .arc .at{font-size:13px; line-height:1.6; color:var(--txt)}
+  .arc .ar{margin-top:12px; border-top:1px solid var(--line); padding-top:10px}
+  .arc .ar .rt{font-size:11px; color:var(--dim); margin-bottom:5px}
+  .arc .ar a{display:block; color:var(--acc); font-size:12px; text-decoration:none; padding:3px 0; line-height:1.4}
+  .empty{text-align:center; color:var(--dim); padding:48px 10px; font-size:13px; line-height:1.7; white-space:pre-line}
+  /* 예산 */
   .bar{height:8px; border-radius:999px; background:#222b3a; overflow:hidden; margin-top:8px}
   .bar > i{display:block; height:100%; background:linear-gradient(90deg,var(--green),var(--acc))}
-  .foot{text-align:center; color:#4a5568; font-size:11px; margin-top:6px}
+  .foot{text-align:center; color:#4a5568; font-size:11px; margin-top:4px}
+  /* 하단 탭바 */
+  .tabbar{position:fixed; left:0; right:0; bottom:0; display:flex; max-width:520px; margin:0 auto;
+          background:rgba(13,17,23,.92); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+          border-top:1px solid var(--line); z-index:40;
+          padding:8px 0 calc(env(safe-area-inset-bottom,0px) + 8px)}
+  .tabbar button{flex:1; background:none; border:0; color:var(--dim); cursor:pointer;
+                 display:flex; flex-direction:column; align-items:center; gap:3px; font-size:10px; font-family:inherit}
+  .tabbar button .i{font-size:21px; filter:grayscale(1) opacity(.55); transition:.15s}
+  .tabbar button.active{color:var(--acc)} .tabbar button.active .i{filter:none; transform:translateY(-1px)}
   canvas#cf{position:fixed; inset:0; pointer-events:none; z-index:50}
 </style>
 </head>
 <body>
   <canvas id="cf"></canvas>
-  <h1>🎮 VLA 연구자 — 내 성장</h1>
-  <div class="sub" id="sub"></div>
+  <div class="topbar"><b>🎮 VLA 과외</b><span id="sub"></span></div>
 
-  <div class="card" id="banner"></div>
-
-  <div class="card">
-    <div class="row">
-      <div class="ring" id="ring"><div class="inner">
-        <div class="lvl">LEVEL</div><div class="num" id="lvl">1</div></div></div>
-      <div style="flex:1">
-        <div class="rank"><span class="em" id="rankEm">🥚</span> <span id="rankTitle">VLA 뉴비</span></div>
-        <div class="xptext" id="xptext"></div>
-      </div>
-      <div style="text-align:center">
-        <div class="flame">🔥</div>
-        <div class="bignum" id="streak">0</div>
-        <div class="label">일 연속</div>
+  <!-- 홈 -->
+  <section class="tab active" id="t-home">
+    <div class="card banner" id="banner"></div>
+    <div class="card">
+      <div class="row">
+        <div class="ring" id="ring"><div class="inner"><div class="lvl">LEVEL</div><div class="num" id="lvl">1</div></div></div>
+        <div style="flex:1">
+          <div class="rank"><span class="em" id="rankEm">🥚</span> <span id="rankTitle">VLA 뉴비</span></div>
+          <div class="xptext" id="xptext"></div>
+        </div>
+        <div style="text-align:center"><div class="flame">🔥</div><div class="bignum" id="streak">0</div><div class="label">일 연속</div></div>
       </div>
     </div>
-  </div>
+    <div class="card">
+      <div class="sec-title">📈 나의 기록</div>
+      <div class="stats2">
+        <div class="stat"><div class="v" id="s-streak">0</div><div class="k">🔥 연속 일수</div></div>
+        <div class="stat"><div class="v" id="s-sess">0</div><div class="k">📚 총 세션</div></div>
+        <div class="stat"><div class="v" id="s-pieces">0</div><div class="k">🧩 조각</div></div>
+        <div class="stat"><div class="v" id="s-badges">0</div><div class="k">🏅 배지</div></div>
+      </div>
+      <div style="margin-top:10px; font-size:12px; color:var(--dim)" id="nextMile"></div>
+    </div>
+    <div class="card">
+      <div class="sec-title">💰 API 예산</div>
+      <div id="costText" style="font-size:13px"></div>
+      <div class="bar"><i id="costBar"></i></div>
+      <div class="foot" id="foot"></div>
+    </div>
+  </section>
 
-  <div class="card">
-    <div class="sec-title">🧩 조각 컬렉션 — <span id="colMeta"></span></div>
-    <div class="coll" id="coll"></div>
-  </div>
+  <!-- 조각 -->
+  <section class="tab" id="t-pieces">
+    <div class="card">
+      <div class="sec-title">🧩 조각 컬렉션 — <span id="colMeta"></span></div>
+      <div class="coll" id="coll"></div>
+    </div>
+  </section>
 
-  <div class="card">
-    <div class="sec-title">🏅 배지 진열장</div>
-    <div class="badges" id="badges"></div>
-  </div>
+  <!-- 배지 -->
+  <section class="tab" id="t-badges">
+    <div class="card"><div class="sec-title">🏅 배지 진열장</div><div class="badges" id="badges"></div></div>
+    <div class="card" id="weakCard" style="display:none">
+      <div class="sec-title">🎯 복습이 필요한 개념</div><div class="chips" id="weak"></div>
+    </div>
+  </section>
 
-  <div class="card" id="weakCard" style="display:none">
-    <div class="sec-title">🎯 복습이 필요한 개념</div>
-    <div class="chips" id="weak"></div>
-  </div>
+  <!-- 아카이브 -->
+  <section class="tab" id="t-archive">
+    <div class="sec-title" style="margin:2px 2px 12px">📚 학습 아카이브 <span style="color:#4a5568">· 다시 보기</span></div>
+    <div id="arc"></div>
+  </section>
 
-  <div class="card">
-    <div class="sec-title">💰 API 예산</div>
-    <div id="costText" style="font-size:13px"></div>
-    <div class="bar"><i id="costBar"></i></div>
-  </div>
-
-  <div class="foot" id="foot"></div>
+  <!-- 하단 탭바 -->
+  <nav class="tabbar">
+    <button data-tab="home" class="active"><span class="i">🏠</span>홈</button>
+    <button data-tab="pieces"><span class="i">🧩</span>조각</button>
+    <button data-tab="badges"><span class="i">🏅</span>배지</button>
+    <button data-tab="archive"><span class="i">📚</span>아카이브</button>
+  </nav>
 
 <script>
-const DATA = {"level": 1, "rank_emoji": "🥚", "rank_title": "VLA 뉴비", "xp": 11, "xp_cur_thr": 0, "xp_next_thr": 60, "streak": 1, "total_sessions": 1, "badges": [{"days": 3, "emoji": "🔥", "name": "작은 불씨", "earned": false}, {"days": 7, "emoji": "⚡", "name": "일주일 전사", "earned": false}, {"days": 14, "emoji": "💎", "name": "2주 정복자", "earned": false}, {"days": 30, "emoji": "🌟", "name": "한 달 마스터", "earned": false}, {"days": 50, "emoji": "🚀", "name": "50일 로켓", "earned": false}, {"days": 100, "emoji": "👑", "name": "백일의 전설", "earned": false}, {"days": 200, "emoji": "🛸", "name": "200일 개척자", "earned": false}, {"days": 365, "emoji": "🎓", "name": "1년 연구자", "earned": false}], "collection": {"total": 1, "unique": 1, "pool_size": 16, "pieces": [{"id": "bolt", "emoji": "🔩", "name": "볼트", "rarity": "common", "count": 0}, {"id": "gear", "emoji": "⚙️", "name": "기어", "rarity": "common", "count": 0}, {"id": "cable", "emoji": "🔌", "name": "케이블", "rarity": "common", "count": 0}, {"id": "battery", "emoji": "🔋", "name": "배터리", "rarity": "common", "count": 0}, {"id": "chip", "emoji": "💾", "name": "메모리칩", "rarity": "common", "count": 0}, {"id": "magnet", "emoji": "🧲", "name": "마그넷", "rarity": "common", "count": 0}, {"id": "gripper", "emoji": "🦾", "name": "그리퍼", "rarity": "rare", "count": 0}, {"id": "camera", "emoji": "📷", "name": "카메라", "rarity": "rare", "count": 0}, {"id": "sensor", "emoji": "🛰️", "name": "센서", "rarity": "rare", "count": 1}, {"id": "neural", "emoji": "🧠", "name": "뉴럴칩", "rarity": "rare", "count": 0}, {"id": "diffusion", "emoji": "🌀", "name": "디퓨전코어", "rarity": "rare", "count": 0}, {"id": "robot", "emoji": "🤖", "name": "로봇", "rarity": "epic", "count": 0}, {"id": "lens", "emoji": "🔭", "name": "광학렌즈", "rarity": "epic", "count": 0}, {"id": "gem", "emoji": "💎", "name": "다이아", "rarity": "legendary", "count": 0}, {"id": "crown", "emoji": "👑", "name": "왕관", "rarity": "legendary", "count": 0}, {"id": "star", "emoji": "🌟", "name": "골든스타", "rarity": "legendary", "count": 0}]}, "weaknesses": [["temporal-ensembling-weighting-mechanism", 1]], "cost": 0.09873900000000001, "budget": 5.0, "today_done": true, "module_name": "Action Chunking & Temporal Ensembling", "day": 2, "day_theme": "구조 & 텐서 퀴즈", "generated_at": "2026-10-05", "celebrate": []};
-
+const DATA = {"level": 1, "rank_emoji": "🥚", "rank_title": "VLA 뉴비", "xp": 11, "xp_cur_thr": 0, "xp_next_thr": 60, "streak": 1, "total_sessions": 1, "badges": [{"days": 3, "emoji": "🔥", "name": "작은 불씨", "earned": false}, {"days": 7, "emoji": "⚡", "name": "일주일 전사", "earned": false}, {"days": 14, "emoji": "💎", "name": "2주 정복자", "earned": false}, {"days": 30, "emoji": "🌟", "name": "한 달 마스터", "earned": false}, {"days": 50, "emoji": "🚀", "name": "50일 로켓", "earned": false}, {"days": 100, "emoji": "👑", "name": "백일의 전설", "earned": false}, {"days": 200, "emoji": "🛸", "name": "200일 개척자", "earned": false}, {"days": 365, "emoji": "🎓", "name": "1년 연구자", "earned": false}], "collection": {"total": 1, "unique": 1, "pool_size": 16, "pieces": [{"id": "bolt", "emoji": "🔩", "name": "볼트", "rarity": "common", "count": 0}, {"id": "gear", "emoji": "⚙️", "name": "기어", "rarity": "common", "count": 0}, {"id": "cable", "emoji": "🔌", "name": "케이블", "rarity": "common", "count": 0}, {"id": "battery", "emoji": "🔋", "name": "배터리", "rarity": "common", "count": 0}, {"id": "chip", "emoji": "💾", "name": "메모리칩", "rarity": "common", "count": 0}, {"id": "magnet", "emoji": "🧲", "name": "마그넷", "rarity": "common", "count": 0}, {"id": "gripper", "emoji": "🦾", "name": "그리퍼", "rarity": "rare", "count": 0}, {"id": "camera", "emoji": "📷", "name": "카메라", "rarity": "rare", "count": 0}, {"id": "sensor", "emoji": "🛰️", "name": "센서", "rarity": "rare", "count": 1}, {"id": "neural", "emoji": "🧠", "name": "뉴럴칩", "rarity": "rare", "count": 0}, {"id": "diffusion", "emoji": "🌀", "name": "디퓨전코어", "rarity": "rare", "count": 0}, {"id": "robot", "emoji": "🤖", "name": "로봇", "rarity": "epic", "count": 0}, {"id": "lens", "emoji": "🔭", "name": "광학렌즈", "rarity": "epic", "count": 0}, {"id": "gem", "emoji": "💎", "name": "다이아", "rarity": "legendary", "count": 0}, {"id": "crown", "emoji": "👑", "name": "왕관", "rarity": "legendary", "count": 0}, {"id": "star", "emoji": "🌟", "name": "골든스타", "rarity": "legendary", "count": 0}]}, "archive": [{"date": "2026-10-05", "module": "Action Chunking & Temporal Ensembling", "day": 1, "theme": "직관 & 워밍업", "takeaway": "Action Chunking은 관찰 참조 빈도를 줄여 compounding error를 억제하고, Temporal Ensembling은 여러 chunk 예측의 가중 평균으로 적응성을 보완한다. 단, chunk_size는 태스크 horizon(sub-task 단위)에 맞게 조율해야 하며 무조건 크다고 좋지 않다(예측 난이도·latency·horizon 초과 문제).", "refs": [{"title": "ACT: Learning Fine-Grained Bimanual Manipulation (Zhao et al., RSS 2023)", "url": "https://arxiv.org/abs/2304.13705"}, {"title": "Diffusion Policy (Chi et al., RSS 2023)", "url": "https://arxiv.org/abs/2303.04137"}, {"title": "π0: A VLA Flow Model (Black et al., 2024)", "url": "https://arxiv.org/abs/2410.24164"}]}], "weaknesses": [["temporal-ensembling-weighting-mechanism", 1]], "cost": 0.09873900000000001, "budget": 5.0, "today_done": true, "module_name": "Action Chunking & Temporal Ensembling", "day": 2, "day_theme": "구조 & 텐서 퀴즈", "generated_at": "2026-10-05", "celebrate": []};
 function el(id){return document.getElementById(id)}
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 
-function render(){
+function renderAll(){
   const d = DATA;
-  el('sub').textContent = `${d.today_done ? '오늘 완료 ✓' : '오늘 아직 — 터미널에 tutor!'} · 총 ${d.total_sessions}세션`;
+  el('sub').textContent = d.today_done ? '오늘 완료 ✓' : 'Day '+d.day+' 대기중';
 
-  // 칭찬 배너
-  let bannerHtml = '';
-  if (d.celebrate && d.celebrate.length){
-    bannerHtml = `<div class="banner" style="border:0;padding:0">` +
-      d.celebrate.map(c=>`<div class="big">${c}</div>`).join('') +
-      `<div class="small">계속 이 기세로! 🚀</div></div>`;
-  } else if (d.streak > 0){
-    bannerHtml = `<div class="banner" style="border:0;padding:0">
-      <div class="big">🔥 ${d.streak}일 연속 수강 중!</div>
-      <div class="small">${d.today_done ? '오늘도 해냈어요. 대단합니다!' : '오늘 마저 하면 '+(d.streak+1)+'일! 불씨를 지켜요'}</div></div>`;
-  } else {
-    bannerHtml = `<div class="banner" style="border:0;padding:0">
-      <div class="big">새로운 시작 ✨</div>
-      <div class="small">오늘 첫 세션으로 불씨를 지펴봐요</div></div>`;
-  }
-  el('banner').innerHTML = bannerHtml;
-  el('banner').classList.add('banner');
+  // 배너
+  let b;
+  if(d.celebrate && d.celebrate.length)
+    b = d.celebrate.map(c=>`<div class="big">${esc(c)}</div>`).join('')+`<div class="small">계속 이 기세로! 🚀</div>`;
+  else if(d.streak>0)
+    b = `<div class="big">🔥 ${d.streak}일 연속 수강 중!</div><div class="small">${d.today_done?'오늘도 해냈어요. 대단합니다!':'오늘 마저 하면 '+(d.streak+1)+'일! 불씨를 지켜요'}</div>`;
+  else
+    b = `<div class="big">새로운 시작 ✨</div><div class="small">오늘 첫 세션으로 불씨를 지펴봐요</div>`;
+  el('banner').innerHTML = b;
 
-  // 레벨 링
-  const span = (d.xp_next_thr||d.xp) - d.xp_cur_thr;
-  const prog = d.xp_next_thr ? Math.max(0,Math.min(100, (d.xp-d.xp_cur_thr)/span*100)) : 100;
-  const ring = el('ring'); ring.style.setProperty('--p', prog);
-  el('lvl').textContent = d.level;
-  el('rankEm').textContent = d.rank_emoji;
-  el('rankTitle').textContent = d.rank_title;
-  el('xptext').textContent = d.xp_next_thr
-      ? `${d.xp} XP · 다음 레벨까지 ${d.xp_next_thr - d.xp} XP`
-      : `${d.xp} XP · 최고 레벨 달성!`;
-  el('streak').textContent = d.streak;
+  // 레벨/링
+  const span=(d.xp_next_thr||d.xp)-d.xp_cur_thr;
+  const prog=d.xp_next_thr?Math.max(0,Math.min(100,(d.xp-d.xp_cur_thr)/span*100)):100;
+  el('ring').style.setProperty('--p',prog);
+  el('lvl').textContent=d.level; el('rankEm').textContent=d.rank_emoji; el('rankTitle').textContent=d.rank_title;
+  el('xptext').textContent=d.xp_next_thr?`${d.xp} XP · 다음 레벨까지 ${d.xp_next_thr-d.xp} XP`:`${d.xp} XP · 최고 레벨!`;
+  el('streak').textContent=d.streak;
 
-  // 조각 컬렉션
-  const col = d.collection;
-  el('colMeta').textContent = `총 ${col.total}개 · 종류 ${col.unique}/${col.pool_size}`;
-  const cc = el('coll'); cc.innerHTML = '';
-  col.pieces.forEach(pc=>{
-    const owned = pc.count > 0;
-    const badge = owned ? `<div class="cb">×${pc.count}</div>` : '';
-    cc.innerHTML += `<div class="cpz r-${pc.rarity} ${owned?'own':''}">
-      ${badge}<div class="ce">${owned?pc.emoji:'❔'}</div>
-      <div class="cn">${owned?pc.name:'???'}</div></div>`;
-  });
-
-  // 배지
-  const bg = el('badges'); bg.innerHTML='';
-  d.badges.forEach(b=>{
-    bg.innerHTML += `<div class="bg ${b.earned?'earned':''}">
-      <div class="em">${b.emoji}</div>
-      <div class="nm">${b.name}</div>
-      <div class="dd">${b.earned?'✓ '+b.days+'일':b.days+'일'}</div></div>`;
-  });
-
-  // 약점
-  if(d.weaknesses && d.weaknesses.length){
-    el('weakCard').style.display='';
-    el('weak').innerHTML = d.weaknesses.map(w=>`<span class="chip">${w[0]} ×${w[1]}</span>`).join('');
-  }
+  // 기록
+  el('s-streak').textContent=d.streak; el('s-sess').textContent=d.total_sessions;
+  el('s-pieces').textContent=d.collection.total; el('s-badges').textContent=d.badges.filter(x=>x.earned).length;
+  const next=d.badges.find(x=>!x.earned);
+  el('nextMile').textContent=next?`다음 배지 ${next.emoji} 「${next.name}」까지 ${Math.max(0,next.days-d.streak)}일`:'모든 배지 획득! 👑';
 
   // 예산
-  const pct = Math.min(100, d.cost/d.budget*100);
-  el('costText').textContent = `누적 $${d.cost.toFixed(2)} / $${d.budget.toFixed(2)} · 남은 예산 $${(d.budget-d.cost).toFixed(2)}`;
-  el('costBar').style.width = pct+'%';
-  el('foot').textContent = `업데이트: ${d.generated_at}`;
+  const pct=Math.min(100,d.cost/d.budget*100);
+  el('costText').textContent=`누적 $${d.cost.toFixed(2)} / $${d.budget.toFixed(2)} · 남은 $${(d.budget-d.cost).toFixed(2)}`;
+  el('costBar').style.width=pct+'%'; el('foot').textContent='업데이트: '+d.generated_at;
+
+  // 조각
+  const col=d.collection;
+  el('colMeta').textContent=`총 ${col.total}개 · 종류 ${col.unique}/${col.pool_size}`;
+  el('coll').innerHTML=col.pieces.map(pc=>{
+    const o=pc.count>0;
+    return `<div class="cpz r-${pc.rarity} ${o?'own':''}">${o?`<div class="cb">×${pc.count}</div>`:''}
+      <div class="ce">${o?pc.emoji:'❔'}</div><div class="cn">${o?esc(pc.name):'???'}</div></div>`;
+  }).join('');
+
+  // 배지
+  el('badges').innerHTML=d.badges.map(x=>`<div class="bg ${x.earned?'earned':''}">
+    <div class="em">${x.emoji}</div><div class="nm">${esc(x.name)}</div>
+    <div class="dd">${x.earned?'✓ '+x.days+'일':x.days+'일'}</div></div>`).join('');
+  if(d.weaknesses && d.weaknesses.length){
+    el('weakCard').style.display='';
+    el('weak').innerHTML=d.weaknesses.map(w=>`<span class="chip">${esc(w[0])} ×${w[1]}</span>`).join('');
+  }
+
+  // 아카이브
+  const arc=d.archive||[];
+  el('arc').innerHTML = arc.length ? arc.map(a=>`
+    <div class="card arc">
+      <div class="ah">📅 ${esc(a.date)} · Day ${a.day} · ${esc(a.theme)}</div>
+      <div class="am">${esc(a.module)}</div>
+      <div class="at">📌 ${esc(a.takeaway)||'(요약 없음)'}</div>
+      ${(a.refs&&a.refs.length)?`<div class="ar"><div class="rt">🔖 핵심 참고자료</div>
+        ${a.refs.map(r=>`<a href="${esc(r.url)}" target="_blank" rel="noopener">🔗 ${esc(r.title)}</a>`).join('')}</div>`:''}
+    </div>`).join('') : `<div class="empty">아직 기록이 없어요.\n세션을 완료하면 그날의 핵심 요약과\n참고 논문이 여기에 쌓입니다 📚</div>`;
 
   if(d.celebrate && d.celebrate.length) confetti();
 }
 
-// 서비스워커 등록 (https에서만 — 오프라인 지원)
-if('serviceWorker' in navigator && location.protocol === 'https:'){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
-}
+// 탭 전환
+document.querySelectorAll('.tabbar button').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.tabbar button').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    el('t-'+btn.dataset.tab).classList.add('active');
+    window.scrollTo(0,0);
+  };
+});
 
-// 간단 컨페티
 function confetti(){
-  const c = el('cf'), x = c.getContext('2d');
-  c.width=innerWidth; c.height=innerHeight;
+  const c=el('cf'),x=c.getContext('2d'); c.width=innerWidth; c.height=innerHeight;
   const cols=['#ffd33d','#58a6ff','#3fb950','#bc8cff','#ff7b43'];
-  let ps=[...Array(120)].map(()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height,
-      r:4+Math.random()*5,c:cols[~~(Math.random()*cols.length)],v:2+Math.random()*4,a:Math.random()*6}));
-  let t=0;
-  (function loop(){
-    x.clearRect(0,0,c.width,c.height); t++;
-    ps.forEach(p=>{p.y+=p.v; p.a+=.1; x.save(); x.translate(p.x,p.y); x.rotate(p.a);
-      x.fillStyle=p.c; x.fillRect(-p.r/2,-p.r/2,p.r,p.r); x.restore();});
-    if(t<160) requestAnimationFrame(loop); else x.clearRect(0,0,c.width,c.height);
-  })();
+  let ps=[...Array(120)].map(()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height,r:4+Math.random()*5,c:cols[~~(Math.random()*cols.length)],v:2+Math.random()*4,a:Math.random()*6}));
+  let t=0;(function loop(){x.clearRect(0,0,c.width,c.height);t++;
+    ps.forEach(p=>{p.y+=p.v;p.a+=.1;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/2,p.r,p.r);x.restore();});
+    if(t<160)requestAnimationFrame(loop);else x.clearRect(0,0,c.width,c.height);})();
 }
-render();
+renderAll();
+if('serviceWorker' in navigator && location.protocol==='https:'){navigator.serviceWorker.register('sw.js').catch(()=>{});}
 </script>
 </body>
 </html>
