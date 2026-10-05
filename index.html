@@ -81,6 +81,40 @@
   .arc .ar .rt{font-size:11px; color:var(--dim); margin-bottom:5px}
   .arc .ar a{display:block; color:var(--acc); font-size:12px; text-decoration:none; padding:3px 0; line-height:1.4}
   .empty{text-align:center; color:var(--dim); padding:48px 10px; font-size:13px; line-height:1.7; white-space:pre-line}
+  /* 아카이브 목록 아이템(탭 가능) */
+  .arc-item{cursor:pointer; transition:.15s} .arc-item:active{transform:scale(.99)}
+  .arc-item .at-brief{font-size:12px; color:var(--dim); line-height:1.5;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+  .arc-item .more{margin-top:10px; font-size:11px; color:var(--acc)}
+  /* 상세 뷰 */
+  .detbar{display:flex; gap:8px; margin-bottom:12px}
+  .detbar button{background:#1a2030; border:1px solid var(--line); color:var(--txt);
+    border-radius:10px; padding:9px 12px; font-size:13px; font-family:inherit; cursor:pointer}
+  .detbar button.tg{margin-left:auto; background:#1e2a44; border-color:var(--acc); color:var(--acc); font-weight:700}
+  .dethead{font-size:12px; color:var(--dim); margin-bottom:2px}
+  .dethead b{display:block; font-size:15px; color:var(--txt); margin-top:3px}
+  .conv-turn{margin:10px 0; border-radius:12px; padding:12px 14px}
+  .conv-tutor{background:#141b27; border:1px solid var(--line)}
+  .conv-user{background:#172338; border:1px solid #2a3f5f}
+  .conv-role{font-size:11px; font-weight:700; color:var(--dim); margin-bottom:6px}
+  .conv-user .conv-role{color:var(--acc)}
+  /* 마크다운 렌더 */
+  .md{font-size:13px; line-height:1.65; color:var(--txt); word-break:break-word}
+  .md h3{font-size:16px; margin:16px 0 8px} .md h4{font-size:14px; margin:14px 0 6px; color:var(--acc)}
+  .md h5{font-size:12px; margin:12px 0 6px; color:var(--dim)}
+  .md p{margin:8px 0} .md b{color:#fff}
+  .md code{background:#0b0f16; border:1px solid var(--line); border-radius:5px; padding:1px 5px;
+    font-size:12px; font-family:ui-monospace,Menlo,Consolas,monospace}
+  .md pre{background:#0b0f16; border:1px solid var(--line); border-radius:10px; padding:12px;
+    overflow-x:auto; margin:10px 0; white-space:pre;
+    font-family:ui-monospace,Menlo,Consolas,monospace; font-size:11px; line-height:1.4; color:#cdd9e5}
+  .md blockquote{border-left:3px solid var(--acc); padding:4px 12px; margin:10px 0; color:var(--dim);
+    background:#11161f; border-radius:0 8px 8px 0}
+  .md ul,.md ol{margin:8px 0 8px 20px} .md li{margin:4px 0}
+  .md hr{border:0; border-top:1px solid var(--line); margin:14px 0}
+  .md table{width:100%; border-collapse:collapse; margin:10px 0; font-size:12px}
+  .md th,.md td{border:1px solid var(--line); padding:6px 8px; text-align:left}
+  .md th{background:#11161f}
   /* 예산 */
   .bar{height:8px; border-radius:999px; background:#222b3a; overflow:hidden; margin-top:8px}
   .bar > i{display:block; height:100%; background:linear-gradient(90deg,var(--green),var(--acc))}
@@ -150,8 +184,20 @@
 
   <!-- 아카이브 -->
   <section class="tab" id="t-archive">
-    <div class="sec-title" style="margin:2px 2px 12px">📚 학습 아카이브 <span style="color:#4a5568">· 다시 보기</span></div>
-    <div id="arc"></div>
+    <div id="arcList">
+      <div class="sec-title" style="margin:2px 2px 12px">📚 학습 아카이브 <span style="color:#4a5568">· 탭하면 전체 노트</span></div>
+      <div id="arc"></div>
+    </div>
+    <div id="arcDetail" style="display:none">
+      <div class="detbar">
+        <button id="arcBack">← 목록</button>
+        <button class="tg" id="arcToggle">💬 대화 보기</button>
+      </div>
+      <div class="card">
+        <div class="dethead" id="arcDetHead"></div>
+        <div class="md" id="arcDetBody" style="margin-top:12px"></div>
+      </div>
+    </div>
   </section>
 
   <!-- 하단 탭바 -->
@@ -163,7 +209,7 @@
   </nav>
 
 <script>
-const DATA = {"level": 1, "rank_emoji": "🥚", "rank_title": "VLA 뉴비", "xp": 23, "xp_cur_thr": 0, "xp_next_thr": 60, "streak": 2, "total_sessions": 2, "badges": [{"days": 3, "emoji": "🔥", "name": "작은 불씨", "earned": false}, {"days": 7, "emoji": "⚡", "name": "일주일 전사", "earned": false}, {"days": 14, "emoji": "💎", "name": "2주 정복자", "earned": false}, {"days": 30, "emoji": "🌟", "name": "한 달 마스터", "earned": false}, {"days": 50, "emoji": "🚀", "name": "50일 로켓", "earned": false}, {"days": 100, "emoji": "👑", "name": "백일의 전설", "earned": false}, {"days": 200, "emoji": "🛸", "name": "200일 개척자", "earned": false}, {"days": 365, "emoji": "🎓", "name": "1년 연구자", "earned": false}], "collection": {"total": 2, "unique": 2, "pool_size": 16, "pieces": [{"id": "bolt", "emoji": "🔩", "name": "볼트", "rarity": "common", "count": 1}, {"id": "gear", "emoji": "⚙️", "name": "기어", "rarity": "common", "count": 0}, {"id": "cable", "emoji": "🔌", "name": "케이블", "rarity": "common", "count": 0}, {"id": "battery", "emoji": "🔋", "name": "배터리", "rarity": "common", "count": 0}, {"id": "chip", "emoji": "💾", "name": "메모리칩", "rarity": "common", "count": 0}, {"id": "magnet", "emoji": "🧲", "name": "마그넷", "rarity": "common", "count": 0}, {"id": "gripper", "emoji": "🦾", "name": "그리퍼", "rarity": "rare", "count": 0}, {"id": "camera", "emoji": "📷", "name": "카메라", "rarity": "rare", "count": 0}, {"id": "sensor", "emoji": "🛰️", "name": "센서", "rarity": "rare", "count": 1}, {"id": "neural", "emoji": "🧠", "name": "뉴럴칩", "rarity": "rare", "count": 0}, {"id": "diffusion", "emoji": "🌀", "name": "디퓨전코어", "rarity": "rare", "count": 0}, {"id": "robot", "emoji": "🤖", "name": "로봇", "rarity": "epic", "count": 0}, {"id": "lens", "emoji": "🔭", "name": "광학렌즈", "rarity": "epic", "count": 0}, {"id": "gem", "emoji": "💎", "name": "다이아", "rarity": "legendary", "count": 0}, {"id": "crown", "emoji": "👑", "name": "왕관", "rarity": "legendary", "count": 0}, {"id": "star", "emoji": "🌟", "name": "골든스타", "rarity": "legendary", "count": 0}]}, "archive": [{"date": "2026-10-06", "module": "Action Chunking & Temporal Ensembling", "day": 2, "theme": "구조 & 텐서 퀴즈", "takeaway": "**CVAE는 \"스타일 변수 z로 멀티모달 행동 분포를 처리\"하는 구조이며, Training 때만 Encoder가 필요하고 Inference 때는 z=0으로 대체된다. Decoder의 query 토큰 100개는 Loss의 고정 매핑을 통해 각 timestep 담당 역할을 학습한다.**", "refs": [{"title": "ACT: Learning Fine-Grained Bimanual Manipulation (Zhao et al., RSS 2023)", "url": "https://arxiv.org/abs/2304.13705"}, {"title": "Diffusion Policy (Chi et al., RSS 2023)", "url": "https://arxiv.org/abs/2303.04137"}, {"title": "π0: A VLA Flow Model (Black et al., 2024)", "url": "https://arxiv.org/abs/2410.24164"}]}, {"date": "2026-10-05", "module": "Action Chunking & Temporal Ensembling", "day": 1, "theme": "직관 & 워밍업", "takeaway": "Action Chunking은 관찰 참조 빈도를 줄여 compounding error를 억제하고, Temporal Ensembling은 여러 chunk 예측의 가중 평균으로 적응성을 보완한다. 단, chunk_size는 태스크 horizon(sub-task 단위)에 맞게 조율해야 하며 무조건 크다고 좋지 않다(예측 난이도·latency·horizon 초과 문제).", "refs": [{"title": "ACT: Learning Fine-Grained Bimanual Manipulation (Zhao et al., RSS 2023)", "url": "https://arxiv.org/abs/2304.13705"}, {"title": "Diffusion Policy (Chi et al., RSS 2023)", "url": "https://arxiv.org/abs/2303.04137"}, {"title": "π0: A VLA Flow Model (Black et al., 2024)", "url": "https://arxiv.org/abs/2410.24164"}]}], "weaknesses": [["temporal-ensembling-weighting-mechanism", 1], ["cvae-decoder-tensor-shape-representation", 1]], "cost": 0.311658, "budget": 5.0, "today_done": true, "module_name": "Action Chunking & Temporal Ensembling", "day": 3, "day_theme": "최신 논문 실전", "generated_at": "2026-10-06", "celebrate": ["🔥 2일 연속 수강! 대단합니다!", "🎲 🔩 볼트 [common] 🆕 NEW!"]};
+const DATA = {"level": 1, "rank_emoji": "🥚", "rank_title": "VLA 뉴비", "xp": 23, "xp_cur_thr": 0, "xp_next_thr": 60, "streak": 2, "total_sessions": 2, "badges": [{"days": 3, "emoji": "🔥", "name": "작은 불씨", "earned": false}, {"days": 7, "emoji": "⚡", "name": "일주일 전사", "earned": false}, {"days": 14, "emoji": "💎", "name": "2주 정복자", "earned": false}, {"days": 30, "emoji": "🌟", "name": "한 달 마스터", "earned": false}, {"days": 50, "emoji": "🚀", "name": "50일 로켓", "earned": false}, {"days": 100, "emoji": "👑", "name": "백일의 전설", "earned": false}, {"days": 200, "emoji": "🛸", "name": "200일 개척자", "earned": false}, {"days": 365, "emoji": "🎓", "name": "1년 연구자", "earned": false}], "collection": {"total": 2, "unique": 2, "pool_size": 16, "pieces": [{"id": "bolt", "emoji": "🔩", "name": "볼트", "rarity": "common", "count": 1}, {"id": "gear", "emoji": "⚙️", "name": "기어", "rarity": "common", "count": 0}, {"id": "cable", "emoji": "🔌", "name": "케이블", "rarity": "common", "count": 0}, {"id": "battery", "emoji": "🔋", "name": "배터리", "rarity": "common", "count": 0}, {"id": "chip", "emoji": "💾", "name": "메모리칩", "rarity": "common", "count": 0}, {"id": "magnet", "emoji": "🧲", "name": "마그넷", "rarity": "common", "count": 0}, {"id": "gripper", "emoji": "🦾", "name": "그리퍼", "rarity": "rare", "count": 0}, {"id": "camera", "emoji": "📷", "name": "카메라", "rarity": "rare", "count": 0}, {"id": "sensor", "emoji": "🛰️", "name": "센서", "rarity": "rare", "count": 1}, {"id": "neural", "emoji": "🧠", "name": "뉴럴칩", "rarity": "rare", "count": 0}, {"id": "diffusion", "emoji": "🌀", "name": "디퓨전코어", "rarity": "rare", "count": 0}, {"id": "robot", "emoji": "🤖", "name": "로봇", "rarity": "epic", "count": 0}, {"id": "lens", "emoji": "🔭", "name": "광학렌즈", "rarity": "epic", "count": 0}, {"id": "gem", "emoji": "💎", "name": "다이아", "rarity": "legendary", "count": 0}, {"id": "crown", "emoji": "👑", "name": "왕관", "rarity": "legendary", "count": 0}, {"id": "star", "emoji": "🌟", "name": "골든스타", "rarity": "legendary", "count": 0}]}, "archive": [{"date": "2026-10-06", "module": "Action Chunking & Temporal Ensembling", "day": 2, "theme": "구조 & 텐서 퀴즈", "takeaway": "**CVAE는 \"스타일 변수 z로 멀티모달 행동 분포를 처리\"하는 구조이며, Training 때만 Encoder가 필요하고 Inference 때는 z=0으로 대체된다. Decoder의 query 토큰 100개는 Loss의 고정 매핑을 통해 각 timestep 담당 역할을 학습한다.**", "refs": [{"title": "ACT: Learning Fine-Grained Bimanual Manipulation (Zhao et al., RSS 2023)", "url": "https://arxiv.org/abs/2304.13705"}, {"title": "Diffusion Policy (Chi et al., RSS 2023)", "url": "https://arxiv.org/abs/2303.04137"}, {"title": "π0: A VLA Flow Model (Black et al., 2024)", "url": "https://arxiv.org/abs/2410.24164"}], "log": [{"role": "TUTOR", "text": "# 🔥 Day 2 — ACT 아키텍처 & 텐서 퀴즈\n\n연속 스트릭 1일 유지 중! 오늘은 ACT(Action Chunking with Transformers)의 **내부 구조를 텐서 차원까지 뜯어보는** 날입니다.\n\n---\n\n## 📐 [개념 강의] ACT 아키텍처: 입력 → 처리 → 출력\n\n### 🎯 왜 이 구조인가? (동기부터)\n\n로봇 팔은 매 스텝 joint position 1개를 예측하면 되지 않냐고 생각할 수 있습니다. 하지만 Day 1에서 봤듯이, 그러면 **compounding error**가 쌓이고, 행동이 끊겨 보이며, 멀티모달 분포(=같은 상황에서 여러 합리적 행동이 존재)를 표현할 수 없습니다.\n\nACT의 해법: **CVAE로 행동 스타일(z)을 뽑고, Transformer로 chunk 전체를 한번에 예측**한다.\n\n---\n\n### 🏗️ 전체 아키텍처 다이어그램\n\n```\n【Training 시】\n\n[관측] image(s) + joint_pos(t)          [행동 시퀀스] a(t)~a(t+99)\n         |                                       |\n         |                              ┌────────────────────┐\n         |                              │  CVAE Encoder      │\n         |                              │  Transformer-based  │\n         |                              │  → μ, σ (각 32-dim)│\n         |                              │  → z ~ N(μ,σ)      │\n         |                              └────────┬───────────┘\n         |                                       │ z (32-dim)\n         └──────────────┬────────────────────────┘\n                        ↓\n              ┌─────────────────────────┐\n              │  CVAE Decoder           │\n              │  (Transformer Decoder)  │\n              │  → chunk_size=100 스텝  │\n              │  × 7 DOF joint pos      │\n              └──────────┬──────────────┘\n                         ↓\n              출력: (100, 7) = 700-dim action chunk\n              \n              Loss = Reconstruction Loss + KL(q(z|...) || N(0,1))\n\n【Inference 시】\n  z = 0 (prior에서 샘플 or 그냥 0으로 고정)\n  → Decoder만 사용 → (100, 7) 예측\n```\n\n---\n\n### 🔬 각 블록 상세 해부\n\n**① CVAE Encoder**\n- **입력**: 미래 action sequence `(chunk_size, 7)` + 현재 joint state `(7,)` → Transformer에 토큰으로 넣음\n- **목적**: \"이 행동 시퀀스는 어떤 *스타일*인가?\" → `z`로 압축\n- **출력**: `μ` (32-dim), `σ` (32-dim) → reparameterization trick으로 `z` (32-dim) 샘플링\n- `z_dim=32`인 이유: 너무 크면 posterior collapse, 너무 작으면 표현력 부족. 32는 경험적 선택.\n- ⚠️ **Inference 때는 Encoder가 없음** — `z=0` (prior mean)으로 고정\n\n**② CVAE Decoder (= Transformer Decoder)**\n- **입력 토큰들**:\n  - `z` (32-dim) → linear projection 후 1개 토큰\n  - image feature (ResNet/ViT 백본에서 추출) → 여러 토큰\n  - 현재 joint position `(7,)` → 1개 토큰\n- **Query**: `chunk_size=100`개의 학습 가능한 positional query 토큰\n- **메커니즘**: cross-attention으로 각 query가 context를 보고 각 timestep의 action을 예측\n- **출력**: `(100, 7)` — 100스텝 × 7 joint position\n\n**③ Action Head**\n- Decoder 출력 `(100, 7)` 에 linear layer → 그대로 joint position 값 (regression)\n- 별도의 softmax 없음 — continuous action space이므로 MSE loss 사용\n\n---\n\n### 🧩 Temporal Ensembling과의 연결 (약점 개념 재등장! 👀)\n\nACT는 매 스텝 chunk를 새로 예측합니다. 즉 t=0에서 예측한 a(0)~a(99), t=1에서 예측한 a(1)~a(100) ... 이 겹칩니다.\n\n**Temporal Ensembling**: 겹치는 예측들을 **지수 가중 평균**으로 합산.\n- 최근 예측일수록 더 큰 가중치 → `w_i = exp(-m * i)` (m은 하이퍼파라미터)\n- 오래된 예측은 가중치가 지수적으로 감소\n\n> 잠깐 확인 — 이 weighting이 **왜 지수 감쇠**여야 할까요? 균등 평균(1/N)이면 안 되는 이유가 있었죠?\n\n---\n\n## ❓ 퀴즈\n\nACT Decoder의 입력 구조를 복습했으니, 이걸 생각해보세요.\n\n**Inference 시**, CVAE Decoder에 들어가는 **query 토큰의 개수와 그 역할**을 설명하고:\n\n> \"query 토큰이 `chunk_size=100`개인데, 이 숫자를 50으로 줄이면 출력 텐서의 shape이 어떻게 바뀌고, 로봇 동작에 어떤 실질적 영향이 생기나요?\"\n\n*힌트: query 토큰 1개 = 출력 1개 timestep의 action과 대응됩니다.*"}, {"role": "USER", "text": "CVAE encoder, decoder에 대해 전혀 이해하지 못했습니다. 그래서 너무 어려워요."}, {"role": "TUTOR", "text": "완전히 이해합니다! CVAE는 처음 보면 \"왜 이렇게 복잡하게?\"라는 생각이 드는 구조입니다. 처음부터 다시 쌓아 올려봅시다.\n\n---\n\n## 📚 CVAE 완전 기초부터 — \"왜 필요한가?\"부터 시작\n\n### Step 1. 문제 상황 — 로봇이 마주치는 멀티모달 분포\n\n테이블 위 컵을 집는 상황을 생각해보세요.\n\n```\n같은 관측(image + joint state)에서도...\n  → 왼손으로 집을 수도 있고\n  → 오른손으로 집을 수도 있고  \n  → 위에서 잡을 수도, 옆에서 잡을 수도 있다\n```\n\n이걸 **단순 regression(MSE)으로 예측**하면?\n- 모델은 \"평균적인 행동\"을 출력 → 왼손도 오른손도 아닌 어중간한 동작\n- 로봇이 **흐릿하게 움직이거나 멈춰버림**\n\n해법: **\"어떤 스타일로 할지\"를 먼저 결정하고, 그 스타일에 맞는 행동을 예측**하자.\n이 \"스타일\"을 담는 변수가 바로 **z (latent variable)** 입니다.\n\n---\n\n### Step 2. VAE 직관 — z란 무엇인가?\n\nVAE(Variational Autoencoder)의 핵심 아이디어:\n\n```\n[원본 데이터 x]\n      ↓  Encoder\n[z: 압축된 잠재 표현]  ← \"데이터의 본질적 특징\"\n      ↓  Decoder\n[복원된 데이터 x̂]\n```\n\n**일반 Autoencoder와의 차이**:\n- 일반 AE: z = 고정된 벡터 (점)\n- VAE: z = **확률 분포** (μ, σ로 정의되는 가우시안)\n  - z를 분포로 만드는 이유 → 나중에 **z를 샘플링해서 다양한 출력 생성** 가능\n\nz의 직관:\n```\nz = [0.8, -0.2, 1.1, ...]  (32-dim 벡터)\n  ↑\n\"왼손으로, 빠르게, 위에서 집는 스타일\"\n이런 의미가 학습을 통해 자동으로 인코딩됨\n```\n\n---\n\n### Step 3. CVAE — \"조건(Condition)이 추가된 VAE\"\n\nVAE는 그냥 데이터를 복원합니다.\n**CVAE(Conditional VAE)**는: **조건 c가 주어졌을 때**, 그에 맞는 출력을 생성합니다.\n\nACT에서:\n- **조건 c** = 현재 로봇 관측 (image + joint position)\n- **데이터 x** = 미래 action sequence (100스텝 × 7 joint)\n- **z** = \"이 상황에서 어떤 스타일로 행동할지\" (32-dim)\n\n```\n【Training】\n  c (관측) + x (실제 행동 시퀀스)\n           ↓\n        Encoder\n           ↓\n      μ, σ (각 32-dim)\n           ↓  reparameterization: z = μ + σ·ε, ε~N(0,1)\n           z\n           ↓\n        Decoder  ← c (관측) 도 같이 입력\n           ↓\n          x̂ (예측 행동 시퀀스)\n           ↓\n     Loss = ||x - x̂||² + KL(N(μ,σ) || N(0,1))\n```\n\n**KL Loss의 역할**: z의 분포가 표준정규분포 N(0,1)에서 너무 멀어지지 않도록 규제.\n→ 나중에 inference 때 z=0을 넣어도 말이 되게 만드는 장치.\n\n---\n\n### Step 4. Inference — Encoder는 사라진다\n\nTraining 때는 \"정답 행동 시퀀스\"가 있으니 Encoder가 z를 뽑을 수 있습니다.\n하지만 **실제 로봇 동작 시에는 미래 행동이 없습니다.**\n\n그래서:\n```\n【Inference】\n  z = 0  (또는 N(0,1)에서 샘플링)\n  c (관측: image + joint)\n           ↓\n        Decoder만 사용\n           ↓\n  (100, 7) action chunk 예측\n```\n\nKL Loss 덕분에 z=0을 넣어도 Decoder가 \"그럭저럭 합리적인 행동\"을 출력하도록 학습됨.\n\n---\n\n### 🗺️ 전체 그림 한 눈에\n\n```\nTraining:\n  [관측 c] ──────────────────────────────┐"}, {"role": "USER", "text": "계속"}, {"role": "TUTOR", "text": "### 🗺️ 전체 그림 한 눈에\n\n```\nTraining:\n  [관측 c] ──────────────────────────────────┐\n  [행동 x: (100,7)] → [Encoder] → μ,σ(32)   │\n                          ↓                  │\n                     z (32-dim)              │\n                          ↓                  │\n                     [Decoder] ←────────────┘\n                          ↓\n                     x̂ (100,7)\n                          ↓\n              Loss = MSE(x, x̂) + KL\n\nInference:\n  [관측 c] ──────────────┐\n  z = 0 (32-dim) ────────┤\n                         ↓\n                    [Decoder]\n                         ↓\n                    x̂ (100,7)  ← 이걸 로봇에 실행\n```\n\n---\n\n### Step 5. 왜 z_dim=32인가?\n\n| z_dim 너무 작 | z_dim 너무 큼 |\n|---|---|\n| 스타일 표현력 부족 | Posterior Collapse 위험 |\n| 행동 다양성 ↓ | Encoder가 z를 무시하고 Decoder가 c만 보게 됨 |\n\n**Posterior Collapse**: z가 항상 N(0,1)로 수렴해버려서 z가 아무 정보도 안 담게 되는 현상. z_dim이 크면 Decoder가 z 없이도 잘 복원할 수 있어서 z를 무시하게 됨.\n\n32는 \"행동 스타일을 담기엔 충분, collapse가 일어나기엔 작은\" 경험적 sweet spot.\n\n---\n\n자, 이제 구조가 좀 잡혔을 거라 생각합니다. 그러면 퀴즈입니다.\n\n## ❓ 퀴즈\n\n아래 빈칸을 채워보세요:\n\n> ACT의 Training에서 Encoder는 **[A]** 와 **[B]** 를 입력받아 z를 만든다.\n> Inference에서는 Encoder가 사라지고 z = **[C]** 로 고정된다.\n> 이게 가능한 이유는 Training 때 **[D]** Loss가 z를 특정 분포 근처에 있도록 강제했기 때문이다.\n\nA, B, C, D를 채워보세요! 어렵지 않습니다 — 방금 설명에 다 있어요. 😊"}, {"role": "USER", "text": "A는 관측(image와 joint states), B는 미래 행동 시퀀스(GT), C는 0 (32-dim), D는 KL입니다."}, {"role": "TUTOR", "text": "완벽합니다! 한 번에 4개 모두 정확하게! 🎯\n\n특히 C에서 \"32-dim\"까지 명시한 게 좋습니다 — 차원 감각이 이미 잡혀 있다는 증거예요.\n\n---\n\n### 🔍 심화 1스푼\n\nC에서 z=0으로 **고정**하는 것과 N(0,1)에서 **샘플링**하는 것, 두 가지 방법이 있습니다.\n\n- **z=0 고정**: 결정론적, 항상 같은 행동 → 재현성 높음, 실제 배포에 유리\n- **z 샘플링**: 매번 조금씩 다른 행동 → 다양성 확보, 탐색에 유리\n\nACT 논문은 기본적으로 **z=0**을 사용합니다. 이유는 간단한데 — 로봇 배포 환경에서 **예측 가능성(predictability)** 이 다양성보다 중요하기 때문입니다.\n\n---\n\n### ❓ 꼬리 질문\n\n이제 Decoder 구조로 들어가 봅시다.\n\nDecoder는 z(32-dim) 하나만 받는 게 아니라, **여러 종류의 입력을 토큰으로 변환해서** Transformer에 넣습니다.\n\n> Decoder가 받는 입력 토큰의 종류를 아까 강의에서 3가지 언급했습니다.\n> 그리고 출력은 **query 토큰** 100개에서 나옵니다.\n>\n> 질문: **query 토큰 100개는 어디서 오고, 각각 무엇에 대응하나요?**\n> (힌트: 이 토큰들은 \"학습 가능한(learnable)\" 파라미터입니다)"}, {"role": "USER", "text": "이 토큰 100개는 전체적으로는 100개의 timestep동안의 액션을 의미하는 것 같습니다."}, {"role": "TUTOR", "text": "맞습니다! 방향은 완전히 정확해요. 조금만 더 구체화해봅시다.\n\n\"100개의 timestep 액션을 의미한다\"는 건 맞는데 — **어떻게** 그 의미를 갖게 되는지가 핵심입니다.\n\n힌트를 드릴게요:\n\n```\n일반 Transformer Decoder의 동작:\n  Query  ──→ [Cross-Attention] ←── Key, Value (context)\n               ↓\n            출력 1개\n```\n\nQuery 토큰 1개가 context(z, image, joint)를 **cross-attention으로 참조**해서 출력 1개를 만듭니다.\n\n그렇다면:\n- Query 토큰 100개 → 출력 **100개**\n- 출력 1개 = timestep 1개의 action **(7-dim joint position)**\n\n여기서 핵심 질문:\n\n> 이 query 토큰 100개는 **random하게 초기화된 학습 가능한 파라미터**입니다.\n> 그런데 왜 **positional** query라고 부를까요?\n> 즉, query[0]이 t=0의 action을, query[99]가 t=99의 action을 담당하게 되는 게\n> **어떻게 보장**되나요?\n\n이게 \"learnable\"이라는 단어와 연결됩니다. 한번 생각해보세요! 🤔"}, {"role": "USER", "text": "흠 잘은 모르겠지만, 아마, 100개의 timestep동안의 궤적을 임베딩 행렬로 생각해보면, 그 임베딩 행렬 간의 연관성(유사도)을 계산해서, 물론 이미 positional encoding이 되었겠으나, 연관성을 학습하면서, 이 action 다음에는 이러한 action이 나와야 한다 등을 학습한 거 아닐까요?"}, {"role": "TUTOR", "text": "좋은 직관입니다! 특히 \"순서 간 연관성을 학습한다\"는 방향은 맞아요. 다만 한 가지 중요한 포인트를 짚어드릴게요.\n\n---\n\n### 정리해드리면:\n\n**왜 query[0]이 t=0을 담당하게 되는가?**\n\n답은 사실 단순합니다:\n\n```\nquery 토큰 100개 = 학습 가능한 임베딩 행렬 (100, d_model)\n                    ↑\n          각 행이 \"나는 몇 번째 timestep을 예측할 거야\"라는\n          역할을 학습 과정에서 자동으로 갖게 됨\n```\n\n별도의 positional encoding 없이도, **Loss가 자동으로 역할을 부여**합니다.\n\n```\nquery[0]의 출력 → t=0 action과 MSE 계산\nquery[1]의 출력 → t=1 action과 MSE 계산\n...\nquery[99]의 출력 → t=99 action과 MSE 계산\n```\n\nLoss가 \"query[0]은 항상 t=0 답과 비교\"되도록 **고정 매핑**이 되어있기 때문에, 학습이 진행되면서 query[0]은 자연스럽게 \"t=0 담당\"이 됩니다. Positional encoding은 이 위에 추가로 붙는 옵션일 뿐이에요.\n\n---\n\n### 학생분이 말한 \"연관성 학습\"은 어디서 일어나나?\n\n이건 query 토큰들 **사이의 self-attention**에서 일어납니다.\n\n```\nquery[0] ──┐\nquery[1] ──┤→ Self-Attention → 서로 참조\n...        │   \"t=5 action은 t=0~4를 고려해야 함\"\nquery[99]──┘\n```\n\n즉 학생분이 말한 직관은 **self-attention 레이어**에서의 동작을 정확히 포착한 겁니다! 다만 \"positional 역할 부여\"는 self-attention이 아니라 **Loss의 고정 매핑**에서 온다는 게 핵심 포인트예요.\n\n---\n\n### ❓ 마지막 퀴즈 (오늘 세션 마무리)\n\n오늘 배운 전체 구조를 종합해서:\n\n> ACT Decoder의 출력 shape은 **(100, 7)** 입니다.\n> 만약 로봇이 7DOF 팔이 아니라 **양팔 로봇 (14DOF)** 이고,\n> chunk_size를 **50**으로 줄인다면,\n> 출력 텐서의 shape은 어떻게 되고,\n> chunk_size를 줄인 것이 로봇 동작에 어떤 trade-off를 만드나요?\n\nDay 1에서 배운 chunk-size trade-off 개념이 여기서 연결됩니다! 😊"}, {"role": "USER", "text": "똑같이 shape은 700dim이 되고, chunk_size를 줄였기 때문에, responsiveness는 좋아지지만, smooth한 궤적에 대한 tradeoff가 존재합니다"}, {"role": "TUTOR", "text": "거의 다 왔는데, 한 가지만 짚어드릴게요!\n\n**shape 계산을 다시 확인해봅시다:**\n\n```\n원래: chunk_size=100, 7DOF  → (100, 7) = 700-dim ✅\n변경: chunk_size=50,  14DOF → (50, 14) = ?\n```\n\n50 × 14 = **700**이 맞긴 한데 — 우연히 숫자가 같아진 거예요.\n\nShape은 **700-dim**이 아니라 **(50, 14)** 로 표현하는 게 정확합니다. 700-dim은 이걸 flatten했을 때의 표현이고, 텐서 구조 자체는 `(chunk_size, DOF)`로 보는 게 맞습니다.\n\n---\n\n**Trade-off 분석은 정확합니다!** ✅\n\n```\nchunk_size 줄이면:\n  ✅ Responsiveness ↑  — 더 자주 새 chunk를 계획하므로 환경 변화에 빠르게 반응\n  ❌ Smoothness ↓     — 짧은 horizon만 보므로 장기적으로 부드러운 궤적 어려움\n  ❌ Compounding error 방어력 ↓ — chunk가 짧으면 action chunking의 이점이 줄어듦\n```\n\nDay 1 개념을 정확히 연결했네요 👍\n\n---\n\n## 📌 오늘의 핵심 테이크어웨이\n\n**CVAE는 \"스타일 변수 z로 멀티모달 행동 분포를 처리\"하는 구조이며, Training 때만 Encoder가 필요하고 Inference 때는 z=0으로 대체된다. Decoder의 query 토큰 100개는 Loss의 고정 매핑을 통해 각 timestep 담당 역할을 학습한다.**"}]}, {"date": "2026-10-05", "module": "Action Chunking & Temporal Ensembling", "day": 1, "theme": "직관 & 워밍업", "takeaway": "Action Chunking은 관찰 참조 빈도를 줄여 compounding error를 억제하고, Temporal Ensembling은 여러 chunk 예측의 가중 평균으로 적응성을 보완한다. 단, chunk_size는 태스크 horizon(sub-task 단위)에 맞게 조율해야 하며 무조건 크다고 좋지 않다(예측 난이도·latency·horizon 초과 문제).", "refs": [{"title": "ACT: Learning Fine-Grained Bimanual Manipulation (Zhao et al., RSS 2023)", "url": "https://arxiv.org/abs/2304.13705"}, {"title": "Diffusion Policy (Chi et al., RSS 2023)", "url": "https://arxiv.org/abs/2303.04137"}, {"title": "π0: A VLA Flow Model (Black et al., 2024)", "url": "https://arxiv.org/abs/2410.24164"}], "log": [{"role": "TUTOR", "text": "# 🔥 Action Chunking & Temporal Ensembling — Day 1\n\n스트릭 0일차, 오늘부터 시작이네요. 첫날이니까 제대로 기초를 다져봅시다.\n\n---\n\n## 📖 개념 강의: Action Chunking이 왜 필요한가?\n\n### 1. 문제의 배경 — Compounding Error\n\n로봇이 행동을 하나씩 순차적으로 예측한다고 상상해봅시다. 모델이 **매 timestep마다** 관찰(observation)을 보고 액션 하나를 출력하는 방식이죠.\n\n문제는 여기서 시작합니다. 모델이 *t*시점에서 아주 작은 실수를 해서 약간 엉뚱한 액션을 냈다면, *t+1*시점의 관찰값 자체가 이미 \"기대했던 것과 살짝 다른 상태\"가 됩니다. 이 오염된 관찰 위에서 다시 액션을 예측하면 두 번째 오류가 첫 번째 오류 위에 쌓이고… 이것이 **compounding error(오류 누적)** 입니다. 스텝이 길어질수록 오류가 기하급수적으로 불어납니다.\n\n---\n\n### 2. 해결 아이디어 — Chunk 단위로 예측하기\n\n**Action Chunking**의 핵심 아이디어는 단순합니다:\n\n> \"매 스텝마다 1개씩 출력하지 말고, **한 번 보고 k개의 연속 액션을 한꺼번에 예측**하자.\"\n\n여기서 **chunk**란 연속된 k개의 액션 시퀀스를 묶은 덩어리입니다. 예를 들어 chunk_size = 10이면, 지금 관찰 하나로 앞으로 10 timestep의 액션을 한 번에 뽑아냅니다.\n\n이게 왜 compounding error를 줄이냐고요? 모델이 관찰을 참조하는 빈도 자체가 줄어들기 때문입니다. 10스텝짜리 chunk를 쓰면, 관찰 → 오류 → 오염된 관찰 → 더 큰 오류라는 **피드백 루프가 1/10 빈도로만** 돌아갑니다. 중간 9스텝 동안은 이미 계획된 액션을 그냥 실행하니까요.\n\n추가로, chunk 내부의 액션들은 서로 **temporal correlation(시간적 상관관계)** 을 가집니다. 로봇이 컵을 집는 동작을 생각해보면, \"손을 뻗는 → 손가락을 오므리는 → 들어올리는\" 세 동작은 독립적이지 않고 자연스럽게 이어집니다. Transformer는 이 시퀀스 전체를 한 번에 학습하면서 **액션들 사이의 자연스러운 연결**을 포착합니다. 반면 1스텝씩 예측하면 이런 연결을 학습하기 훨씬 어렵습니다.\n\n---\n\n### 3. 그러면 Temporal Ensembling은?\n\nchunk 단위 예측에는 한 가지 단점이 있습니다. 10스텝을 한 번에 계획했더라도, 실제로 실행하다 보면 **예상 밖의 상황**(물체가 조금 밀렸다든가)이 생깁니다. 이때 이미 계획된 나머지 액션들을 그대로 밀어붙이면 낭패죠.\n\n**Temporal Ensembling**은 이 문제를 이렇게 풉니다: 매 timestep마다 새로 chunk를 예측하되, **여러 chunk 예측들을 가중 평균**해서 최종 액션을 결정합니다. 최신 예측일수록 더 높은 가중치를 주고요. 이러면 \"오래된 계획\"과 \"최신 관찰 기반 계획\"이 부드럽게 혼합되어 적응성이 생깁니다.\n\n---\n\n## ✅ 이해 확인 퀴즈\n\n다음 중 **Action Chunking이 compounding error를 줄이는 핵심 이유**로 가장 적절한 것은?\n\n**(A)** 모델이 더 큰 신경망을 사용하기 때문에 개별 액션 예측 정확도가 높아진다\n\n**(B)** 관찰을 참조하는 빈도가 줄어 오염된 관찰이 오류 루프에 개입하는 횟수가 감소한다\n\n**(C)** 액션을 랜덤하게 샘플링하므로 오류가 서로 상쇄된다\n\n**(D)** Transformer가 chunk 내 액션들을 병렬로 실행하여 물리적 실행 시간이 단축된다"}, {"role": "USER", "text": "B"}, {"role": "TUTOR", "text": "정확합니다! 핵심을 바로 짚었네요. 👍\n\n**심화 한 스푼:** ACT(Action Chunking with Transformers) 논문에서는 chunk_size를 하이퍼파라미터로 두고 실험했는데, 너무 크면 적응성이 떨어지고 너무 작으면 compounding error 억제 효과가 줄어드는 트레이드오프가 있습니다. 논문에서 chunk_size=100이 많은 태스크에서 sweet spot으로 나왔는데, 이게 태스크 horizon과 어떻게 맞물리는지는 꽤 흥미로운 포인트입니다.\n\n---\n\n### 🔍 꼬리 질문 1\n\nTemporal Ensembling에서 **최신 chunk 예측에 더 높은 가중치**를 주는 방식을 씁니다.\n\n그런데 반대로, 오래된 예측에 더 높은 가중치를 주면 어떤 문제가 생길까요? 직관적으로 한 번 생각해보세요."}, {"role": "USER", "text": "오래된 예측에 더 높은 가중치를 주게 되면, 기존의 궤적을 유지하려는 경향성이 짙어져, 예상 밖의 상황에 대해서 반응성이 안 좋아질 수 있을 것 같습니다."}, {"role": "TUTOR", "text": "정확합니다. 표현도 깔끔하네요. 👍\n\n\"기존 궤적을 유지하려는 관성\"이라는 표현이 딱 맞습니다. 논문 용어로는 이걸 **responsiveness vs. smoothness tradeoff**로 볼 수 있어요. 오래된 예측에 가중치를 높이면 액션이 부드러워지는 대신 새 관찰에 대한 반응이 둔해집니다.\n\n---\n\n### 🔍 꼬리 질문 2 (마지막)\n\n조금 더 깊이 들어가 봅시다.\n\nTemporal Ensembling은 **매 timestep마다 새 chunk를 예측**합니다. 그런데 이렇게 하면 chunk_size=100일 때, 한 스텝 실행할 때마다 모델을 100번이 아니라 **매번 1회 forward pass**만 돌리면 됩니다.\n\n여기서 질문입니다:\n\n> Temporal Ensembling을 쓰면 **chunk_size를 크게 잡을수록** compounding error 억제와 적응성을 동시에 잡을 수 있을 것처럼 보입니다. 그렇다면 chunk_size를 무한히 크게 하면 안 되는 이유는 무엇일까요?\n\n힌트 없이 먼저 생각해보세요. 직관이든 추론이든 괜찮습니다."}, {"role": "USER", "text": "chunk_size를 무한히 크게 하게 되면, 모델이 개입하는 횟수 자체가 매우 줄기 때문에, 위의 질문과 똑같이 responsiveness가 둔해지는 문제가 존재합니다. 그러나 smoothness는 높아져 액션은 부드러워질 수 있을 거 같네요."}, {"role": "TUTOR", "text": "좋은 직관인데, 한 가지 짚고 넘어갈 게 있습니다.\n\nTemporal Ensembling을 쓸 때는 chunk_size가 커도 **매 timestep마다 모델을 새로 돌립니다.** 즉, 모델 개입 횟수 자체는 chunk_size와 무관하게 항상 매 스텝 1회입니다.\n\n그렇다면 chunk_size를 키웠을 때 진짜 문제는 어디서 올까요?\n\n힌트를 드리면: 모델이 현재 관찰로부터 **100스텝 후의 액션**을 정확히 예측할 수 있을까요? 태스크 horizon보다 훨씬 긴 미래를 예측하려 할 때 **모델 입장에서** 어떤 어려움이 생길지 생각해보세요."}, {"role": "USER", "text": "너무나도 long horizion을 모델에게 요구하다보니, 모델이 추론을 어려워할 수도 있고, 연산도 꽤 발생하여 latency 문제가 존재할 수 있습니다. 또한, 만약 task의 horizon보다도 더 긴 시간의 추론을 하게되면, 의미없는 동작을 추론하여, 위험한 동작을 만들어낼 수도 있습니다."}, {"role": "TUTOR", "text": "완벽합니다. 세 가지 포인트 모두 정확해요. 👍\n\n정리하면:\n\n1. **예측 난이도** — 먼 미래일수록 불확실성이 커져 모델의 예측 품질이 급락\n2. **Latency** — chunk_size가 크면 출력 시퀀스가 길어져 inference 비용 증가\n3. **Task horizon 초과** — 태스크가 이미 끝난 시점 이후의 액션을 억지로 생성하면 의미 없거나 위험한 동작 출력\n\n특히 3번은 실제로 중요한 포인트입니다. ACT 논문에서 chunk_size를 태스크의 자연스러운 동작 단위(sub-task horizon)에 맞추는 게 중요하다고 강조하는 이유가 바로 이겁니다.\n\n---\n\n📌 **오늘의 핵심 테이크어웨이:**\n\nAction Chunking은 관찰 참조 빈도를 줄여 compounding error를 억제하고, Temporal Ensembling은 여러 chunk 예측의 가중 평균으로 적응성을 보완한다. 단, chunk_size는 태스크 horizon에 맞게 조율해야 하며 무조건 크다고 좋지 않다."}]}], "weaknesses": [["temporal-ensembling-weighting-mechanism", 1], ["cvae-decoder-tensor-shape-representation", 1]], "cost": 0.311658, "budget": 5.0, "today_done": true, "module_name": "Action Chunking & Temporal Ensembling", "day": 3, "day_theme": "최신 논문 실전", "generated_at": "2026-10-06", "celebrate": []};
 function el(id){return document.getElementById(id)}
 function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 
@@ -218,19 +264,85 @@ function renderAll(){
     el('weak').innerHTML=d.weaknesses.map(w=>`<span class="chip">${esc(w[0])} ×${w[1]}</span>`).join('');
   }
 
-  // 아카이브
+  // 아카이브 목록 (최신순, 탭하면 상세)
   const arc=d.archive||[];
-  el('arc').innerHTML = arc.length ? arc.map(a=>`
-    <div class="card arc">
+  el('arc').innerHTML = arc.length ? arc.map((a,i)=>`
+    <div class="card arc arc-item" onclick="openArc(${i})">
       <div class="ah">📅 ${esc(a.date)} · Day ${a.day} · ${esc(a.theme)}</div>
       <div class="am">${esc(a.module)}</div>
-      <div class="at">📌 ${esc(a.takeaway)||'(요약 없음)'}</div>
-      ${(a.refs&&a.refs.length)?`<div class="ar"><div class="rt">🔖 핵심 참고자료</div>
-        ${a.refs.map(r=>`<a href="${esc(r.url)}" target="_blank" rel="noopener">🔗 ${esc(r.title)}</a>`).join('')}</div>`:''}
-    </div>`).join('') : `<div class="empty">아직 기록이 없어요.\n세션을 완료하면 그날의 핵심 요약과\n참고 논문이 여기에 쌓입니다 📚</div>`;
+      <div class="at-brief">📌 ${esc(a.takeaway)||'(요약 없음)'}</div>
+      <div class="more">탭하여 전체 노트 보기 →</div>
+    </div>`).join('') : `<div class="empty">아직 기록이 없어요.\n세션을 완료하면 그날의 노트와\n참고 논문이 여기에 쌓입니다 📚</div>`;
 
   if(d.celebrate && d.celebrate.length) confetti();
 }
+
+// ── 간단 마크다운 렌더러 (코드블록·헤딩·표·리스트·인용·볼드 등) ──
+function md(src){
+  src=(src||'').replace(/\r/g,'');
+  const blocks=[];
+  src=src.replace(/```([\s\S]*?)```/g,(m,c)=>{blocks.push(c.replace(/^\n/,''));return ' C'+(blocks.length-1)+' ';});
+  const E=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const inl=s=>E(s).replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*]+)\*/g,'$1<i>$2</i>');
+  const L=src.split('\n'); const o=[]; let i=0;
+  const isMark=s=>/^ C\d+ $/.test(s)||/^\s*---+\s*$/.test(s)||/^#{1,6}\s/.test(s)
+    ||/^\s*>/.test(s)||/^\s*([-*]|\d+\.)\s+/.test(s)||/^\s*\|.*\|\s*$/.test(s)||/^\s*$/.test(s);
+  while(i<L.length){
+    let ln=L[i], cm=ln.match(/^ C(\d+) $/);
+    if(cm){o.push('<pre>'+E(blocks[+cm[1]])+'</pre>');i++;continue;}
+    if(/^\s*---+\s*$/.test(ln)){o.push('<hr>');i++;continue;}
+    let h=ln.match(/^(#{1,6})\s+(.*)$/);
+    if(h){let lv=Math.min(5,h[1].length+2);o.push(`<h${lv}>`+inl(h[2])+`</h${lv}>`);i++;continue;}
+    if(/^\s*>/.test(ln)){let b=[];while(i<L.length&&/^\s*>/.test(L[i])){b.push(L[i].replace(/^\s*>\s?/,''));i++;}o.push('<blockquote>'+inl(b.join(' '))+'</blockquote>');continue;}
+    if(/^\s*\|.*\|\s*$/.test(ln)&&i+1<L.length&&/^\s*\|[\s:|-]+\|\s*$/.test(L[i+1])){
+      let rows=[];while(i<L.length&&/^\s*\|.*\|\s*$/.test(L[i])){rows.push(L[i]);i++;}
+      const cells=r=>r.trim().replace(/^\||\|$/g,'').split('|').map(c=>c.trim());
+      let t='<table><thead><tr>'+cells(rows[0]).map(c=>'<th>'+inl(c)+'</th>').join('')+'</tr></thead><tbody>';
+      rows.slice(2).forEach(r=>{t+='<tr>'+cells(r).map(c=>'<td>'+inl(c)+'</td>').join('')+'</tr>';});
+      o.push(t+'</tbody></table>');continue;
+    }
+    if(/^\s*([-*]|\d+\.)\s+/.test(ln)){
+      let ord=/^\s*\d+\./.test(ln),b=[];
+      while(i<L.length&&/^\s*([-*]|\d+\.)\s+/.test(L[i])){b.push(L[i].replace(/^\s*([-*]|\d+\.)\s+/,''));i++;}
+      o.push('<'+(ord?'ol':'ul')+'>'+b.map(x=>'<li>'+inl(x)+'</li>').join('')+'</'+(ord?'ol':'ul')+'>');continue;
+    }
+    if(/^\s*$/.test(ln)){i++;continue;}
+    let b=[ln];i++;while(i<L.length&&!isMark(L[i])){b.push(L[i]);i++;}
+    o.push('<p>'+inl(b.join(' '))+'</p>');
+  }
+  return o.join('\n');
+}
+
+// ── 아카이브 상세/대화 토글 ──
+let _arcIdx=-1, _convMode=false;
+function _tutorNote(a){
+  const t=(a.log||[]).filter(x=>x.role==='TUTOR').map(x=>x.text);
+  return t.length ? t.join('\n\n---\n\n') : (a.takeaway||'(노트 없음)');
+}
+function _convHtml(a){
+  return (a.log||[]).map(x=>`<div class="conv-turn ${x.role==='TUTOR'?'conv-tutor':'conv-user'}">
+    <div class="conv-role">${x.role==='TUTOR'?'🦉 튜터':'💬 나'}</div>
+    <div class="md">${md(x.text)}</div></div>`).join('') || '<div class="empty">대화 기록이 없어요.</div>';
+}
+function _renderDet(){
+  const a=DATA.archive[_arcIdx]; if(!a)return;
+  el('arcDetHead').innerHTML=`📅 ${esc(a.date)} · Day ${a.day} · ${esc(a.theme)}<b>${esc(a.module)}</b>`;
+  if(_convMode){
+    el('arcToggle').textContent='📖 노트 보기';
+    el('arcDetBody').innerHTML=_convHtml(a);
+  }else{
+    el('arcToggle').textContent='💬 대화 보기';
+    let refs=(a.refs&&a.refs.length)?`<div class="ar"><div class="rt">🔖 핵심 참고자료</div>
+      ${a.refs.map(r=>`<a href="${esc(r.url)}" target="_blank" rel="noopener">🔗 ${esc(r.title)}</a>`).join('')}</div>`:'';
+    el('arcDetBody').innerHTML=md(_tutorNote(a))+refs;
+  }
+}
+window.openArc=function(i){ _arcIdx=i; _convMode=false;
+  el('arcList').style.display='none'; el('arcDetail').style.display='';
+  _renderDet(); window.scrollTo(0,0);
+};
+function _arcToList(){ el('arcDetail').style.display='none'; el('arcList').style.display=''; window.scrollTo(0,0); }
 
 // 탭 전환
 document.querySelectorAll('.tabbar button').forEach(btn=>{
@@ -239,9 +351,12 @@ document.querySelectorAll('.tabbar button').forEach(btn=>{
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
     btn.classList.add('active');
     el('t-'+btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab==='archive') _arcToList();  // 아카이브는 항상 목록부터
     window.scrollTo(0,0);
   };
 });
+el('arcBack').onclick=_arcToList;
+el('arcToggle').onclick=()=>{ _convMode=!_convMode; _renderDet(); window.scrollTo(0,0); };
 
 function confetti(){
   const c=el('cf'),x=c.getContext('2d'); c.width=innerWidth; c.height=innerHeight;
