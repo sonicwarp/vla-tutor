@@ -1,5 +1,5 @@
 // VLA 과외 PWA 서비스워커 — 오프라인 셸 캐싱
-const CACHE = 'vla-tutor-v1';
+const CACHE = 'vla-tutor-v2';
 const ASSETS = ['index.html', 'manifest.json', 'icon-512.png'];
 
 self.addEventListener('install', e => {
