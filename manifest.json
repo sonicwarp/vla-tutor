@@ -1,7 +1,7 @@
 {
-  "name": "VLA 과외 — 내 성장",
-  "short_name": "VLA 과외",
-  "description": "로보틱스 VLA 듀오링고식 과외 진척 대시보드",
+  "name": "Physical AI 과외 — 내 성장",
+  "short_name": "Physical AI",
+  "description": "Physical AI · 로보틱스 듀오링고식 과외 진척 대시보드",
   "start_url": "index.html",
   "scope": ".",
   "display": "standalone",
@@ -9,6 +9,6 @@
   "background_color": "#0d1117",
   "theme_color": "#0d1117",
   "icons": [
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "icon-v2.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }
