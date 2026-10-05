@@ -54,15 +54,22 @@
   .banner .small{color:var(--dim); font-size:12px; margin-top:4px}
   /* 퍼즐판 */
   .sec-title{font-size:13px; font-weight:700; color:var(--dim); margin-bottom:12px; text-transform:none}
-  .puz{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; max-width:220px; margin:0 auto}
-  .pz{aspect-ratio:1; border-radius:12px; display:grid; place-items:center; font-size:30px;
-      background:#11161f; border:1px dashed #2a3240; color:#30384a; transition:.3s}
-  .pz.on{background:linear-gradient(135deg,#1e2a44,#263455); border:1px solid var(--acc);
-         color:#fff; box-shadow:0 0 12px rgba(88,166,255,.4); animation:pop .4s ease}
-  @keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
-  .puz-meta{text-align:center; margin-top:12px; font-size:13px}
-  .shelf{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
-  .trophy{background:#1a2030; border:1px solid var(--line); border-radius:10px; padding:6px 10px; font-size:13px}
+  .coll{display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
+  .cpz{position:relative; aspect-ratio:1; border-radius:12px; display:flex; flex-direction:column;
+       align-items:center; justify-content:center; gap:3px; background:#11161f; border:1px solid #2a3240}
+  .cpz.own{background:#161d2b; animation:pop .4s ease}
+  @keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  .cpz .ce{font-size:27px; filter:grayscale(1) opacity(.28)}
+  .cpz.own .ce{filter:none}
+  .cpz .cn{font-size:9px; color:#4a5568; line-height:1}
+  .cpz.own .cn{color:var(--dim)}
+  .cpz .cb{position:absolute; top:3px; right:4px; font-size:10px; font-weight:800; color:#fff;
+           background:#2f4d7a; border-radius:999px; padding:0 5px}
+  .cpz.own.r-rare{border-color:var(--acc); box-shadow:0 0 8px rgba(88,166,255,.3)}
+  .cpz.own.r-epic{border-color:var(--purple); box-shadow:0 0 10px rgba(188,140,255,.35)}
+  .cpz.own.r-epic .cb{background:#6b4a9e}
+  .cpz.own.r-legendary{border-color:var(--gold); box-shadow:0 0 13px rgba(255,211,61,.45)}
+  .cpz.own.r-legendary .cb{background:#a9801a}
   /* 배지 */
   .badges{display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
   .bg{text-align:center; padding:12px 4px; border-radius:14px; background:#11161f; border:1px solid var(--line)}
@@ -109,10 +116,8 @@
   </div>
 
   <div class="card">
-    <div class="sec-title">🧩 퍼즐 수집 — <span id="puzName"></span></div>
-    <div class="puz" id="puz"></div>
-    <div class="puz-meta" id="puzMeta"></div>
-    <div class="shelf" id="shelf"></div>
+    <div class="sec-title">🧩 조각 컬렉션 — <span id="colMeta"></span></div>
+    <div class="coll" id="coll"></div>
   </div>
 
   <div class="card">
@@ -134,7 +139,7 @@
   <div class="foot" id="foot"></div>
 
 <script>
-const DATA = {"level": 1, "rank_emoji": "🥚", "rank_title": "VLA 뉴비", "xp": 11, "xp_cur_thr": 0, "xp_next_thr": 60, "streak": 1, "total_sessions": 1, "badges": [{"days": 3, "emoji": "🔥", "name": "작은 불씨", "earned": false}, {"days": 7, "emoji": "⚡", "name": "일주일 전사", "earned": false}, {"days": 14, "emoji": "💎", "name": "2주 정복자", "earned": false}, {"days": 30, "emoji": "🌟", "name": "한 달 마스터", "earned": false}, {"days": 50, "emoji": "🚀", "name": "50일 로켓", "earned": false}, {"days": 100, "emoji": "👑", "name": "백일의 전설", "earned": false}, {"days": 200, "emoji": "🛸", "name": "200일 개척자", "earned": false}, {"days": 365, "emoji": "🎓", "name": "1년 연구자", "earned": false}], "puzzle": {"pieces_total": 0, "per_puzzle": 9, "completed_puzzles": 0, "current_filled": 0, "cur_emoji": "🤖", "cur_name": "로봇 팔", "collection": []}, "weaknesses": [["temporal-ensembling-weighting-mechanism", 1]], "cost": 0.09873900000000001, "budget": 5.0, "today_done": true, "module_name": "Action Chunking & Temporal Ensembling", "day": 2, "day_theme": "구조 & 텐서 퀴즈", "generated_at": "2026-10-05", "celebrate": []};
+const DATA = {"level": 1, "rank_emoji": "🥚", "rank_title": "VLA 뉴비", "xp": 11, "xp_cur_thr": 0, "xp_next_thr": 60, "streak": 1, "total_sessions": 1, "badges": [{"days": 3, "emoji": "🔥", "name": "작은 불씨", "earned": false}, {"days": 7, "emoji": "⚡", "name": "일주일 전사", "earned": false}, {"days": 14, "emoji": "💎", "name": "2주 정복자", "earned": false}, {"days": 30, "emoji": "🌟", "name": "한 달 마스터", "earned": false}, {"days": 50, "emoji": "🚀", "name": "50일 로켓", "earned": false}, {"days": 100, "emoji": "👑", "name": "백일의 전설", "earned": false}, {"days": 200, "emoji": "🛸", "name": "200일 개척자", "earned": false}, {"days": 365, "emoji": "🎓", "name": "1년 연구자", "earned": false}], "collection": {"total": 1, "unique": 1, "pool_size": 16, "pieces": [{"id": "bolt", "emoji": "🔩", "name": "볼트", "rarity": "common", "count": 0}, {"id": "gear", "emoji": "⚙️", "name": "기어", "rarity": "common", "count": 0}, {"id": "cable", "emoji": "🔌", "name": "케이블", "rarity": "common", "count": 0}, {"id": "battery", "emoji": "🔋", "name": "배터리", "rarity": "common", "count": 0}, {"id": "chip", "emoji": "💾", "name": "메모리칩", "rarity": "common", "count": 0}, {"id": "magnet", "emoji": "🧲", "name": "마그넷", "rarity": "common", "count": 0}, {"id": "gripper", "emoji": "🦾", "name": "그리퍼", "rarity": "rare", "count": 0}, {"id": "camera", "emoji": "📷", "name": "카메라", "rarity": "rare", "count": 0}, {"id": "sensor", "emoji": "🛰️", "name": "센서", "rarity": "rare", "count": 1}, {"id": "neural", "emoji": "🧠", "name": "뉴럴칩", "rarity": "rare", "count": 0}, {"id": "diffusion", "emoji": "🌀", "name": "디퓨전코어", "rarity": "rare", "count": 0}, {"id": "robot", "emoji": "🤖", "name": "로봇", "rarity": "epic", "count": 0}, {"id": "lens", "emoji": "🔭", "name": "광학렌즈", "rarity": "epic", "count": 0}, {"id": "gem", "emoji": "💎", "name": "다이아", "rarity": "legendary", "count": 0}, {"id": "crown", "emoji": "👑", "name": "왕관", "rarity": "legendary", "count": 0}, {"id": "star", "emoji": "🌟", "name": "골든스타", "rarity": "legendary", "count": 0}]}, "weaknesses": [["temporal-ensembling-weighting-mechanism", 1]], "cost": 0.09873900000000001, "budget": 5.0, "today_done": true, "module_name": "Action Chunking & Temporal Ensembling", "day": 2, "day_theme": "구조 & 텐서 퀴즈", "generated_at": "2026-10-05", "celebrate": []};
 
 function el(id){return document.getElementById(id)}
 
@@ -172,19 +177,17 @@ function render(){
       : `${d.xp} XP · 최고 레벨 달성!`;
   el('streak').textContent = d.streak;
 
-  // 퍼즐판
-  const p = d.puzzle;
-  el('puzName').textContent = `${p.cur_emoji} ${p.cur_name} (${p.current_filled}/${p.per_puzzle})`;
-  const board = el('puz'); board.innerHTML = '';
-  for(let i=0;i<p.per_puzzle;i++){
-    const on = i < p.current_filled;
-    board.innerHTML += `<div class="pz ${on?'on':''}">${on?p.cur_emoji:'?'}</div>`;
-  }
-  el('puzMeta').innerHTML = p.completed_puzzles>0
-      ? `완성한 그림 <b>${p.completed_puzzles}</b>개 · 조각 총 <b>${p.pieces_total}</b>개`
-      : `하루 공부 = 조각 1개 · ${p.per_puzzle}개 모으면 그림 완성!`;
-  const shelf = el('shelf'); shelf.innerHTML = '';
-  (p.collection||[]).forEach(c=> shelf.innerHTML += `<div class="trophy">${c}</div>`);
+  // 조각 컬렉션
+  const col = d.collection;
+  el('colMeta').textContent = `총 ${col.total}개 · 종류 ${col.unique}/${col.pool_size}`;
+  const cc = el('coll'); cc.innerHTML = '';
+  col.pieces.forEach(pc=>{
+    const owned = pc.count > 0;
+    const badge = owned ? `<div class="cb">×${pc.count}</div>` : '';
+    cc.innerHTML += `<div class="cpz r-${pc.rarity} ${owned?'own':''}">
+      ${badge}<div class="ce">${owned?pc.emoji:'❔'}</div>
+      <div class="cn">${owned?pc.name:'???'}</div></div>`;
+  });
 
   // 배지
   const bg = el('badges'); bg.innerHTML='';
