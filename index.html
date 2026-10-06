@@ -336,7 +336,8 @@ function _renderDet(){
     el('arcToggle').textContent='💬 대화 보기';
     let refs=(a.refs&&a.refs.length)?`<div class="ar"><div class="rt">🔖 핵심 참고자료</div>
       ${a.refs.map(r=>`<a href="${esc(r.url)}" target="_blank" rel="noopener">🔗 ${esc(r.title)}</a>`).join('')}</div>`:'';
-    el('arcDetBody').innerHTML=md(_noteContent(a))+refs;
+    let news=(a.news&&a.news.trim())?`<div class="ar"><div class="rt">📰 그날의 로봇·AI 소식</div><div class="md">${md(a.news)}</div></div>`:'';
+    el('arcDetBody').innerHTML=md(_noteContent(a))+refs+news;
   }
 }
 window.openArc=function(i){ _arcIdx=i; _convMode=false;
